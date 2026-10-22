@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: gap-relay
+    runtime: node
+    plan: free
+    numInstances: 1
+    autoDeployTrigger: commit
+    buildCommand: npm ci --include=dev && npm run format:check && npm run typecheck && npm test && npm run build:relay
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: '24'
+      - key: NODE_ENV
+        value: production
+      - key: SERVE_CLIENT
+        value: 'false'
+      - key: ALLOWED_ORIGINS
+        sync: false
