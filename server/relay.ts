@@ -16,6 +16,7 @@ import {
 } from '../shared/protocol.js';
 
 interface LiveRoom {
+  creatorId: string;
   code: string;
   mode: Room['mode'];
   members: Map<string, Member>;
@@ -49,6 +50,7 @@ export function createRelay(
   });
   const rooms = new Map<string, LiveRoom>();
   const publicRoom = (room: LiveRoom): Room => ({
+    creatorId: room.creatorId,
     code: room.code,
     mode: room.mode,
     members: [...room.members.values()],
@@ -123,6 +125,7 @@ export function createRelay(
       } while (rooms.has(code));
       const expiresAt = Date.now() + LIMITS.roomMs;
       const room: LiveRoom = {
+        creatorId: socket.id,
         code,
         mode: input.mode,
         expiresAt,
@@ -167,8 +170,10 @@ export function createRelay(
     socket.on('room:end', (ack) => {
       if (typeof ack !== 'function') return;
       const room = getRoom();
-      if (room)
-        destroyRoom(room.code, 'A participant ended this tunnel. Its contents have been cleared.');
+      if (!room) return ack({ ok: false, error: 'Join a tunnel first.' });
+      if (room.creatorId !== socket.id)
+        return ack({ ok: false, error: 'Only the tunnel creator can end this tunnel.' });
+      destroyRoom(room.code, 'The creator ended this tunnel. Its contents have been cleared.');
       for (const id of transfers.keys()) cancel(id);
       ack({ ok: true, data: undefined });
     });

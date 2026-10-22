@@ -156,7 +156,13 @@ test('a new arrival gets no past content and remaining teammates survive a disco
     .emitWithAck('room:join', { name: 'C', code: room.data.code });
   assert.ok(joined.ok);
   assert.equal((await joinedMembership).length, 3);
-  assert.deepEqual(Object.keys(joined.data).sort(), ['code', 'expiresAt', 'members', 'mode']);
+  assert.deepEqual(Object.keys(joined.data).sort(), [
+    'code',
+    'creatorId',
+    'expiresAt',
+    'members',
+    'mode',
+  ]);
   assert.equal(pastReceived, false);
   const membership = event<{ name: string }[]>(b, 'room:members');
   a.disconnect();
@@ -220,4 +226,41 @@ test('formatted replies and code metadata reach peers without server history', a
   });
   assert.equal(invalid.ok, false);
   await a.timeout(2000).emitWithAck('room:end');
+});
+
+test('only the original creator can end a tunnel, including after leaving and rejoining', async () => {
+  const host = await client(),
+    guest = await client(),
+    stranger = await client();
+  const created = await host
+    .timeout(2000)
+    .emitWithAck('room:create', { name: 'Host', mode: 'team' });
+  assert.ok(created.ok);
+  assert.equal(created.data.creatorId, host.id);
+  const joined = await guest
+    .timeout(2000)
+    .emitWithAck('room:join', { name: 'Guest', code: created.data.code });
+  assert.ok(joined.ok);
+  assert.equal(joined.data.creatorId, host.id);
+  const denied = await guest.timeout(2000).emitWithAck('room:end');
+  assert.deepEqual(denied, { ok: false, error: 'Only the tunnel creator can end this tunnel.' });
+  const outside = await stranger.timeout(2000).emitWithAck('room:end');
+  assert.equal(outside.ok, false);
+  assert.ok(
+    (
+      await guest
+        .timeout(2000)
+        .emitWithAck('content:text', { kind: 'text', text: 'Still connected' })
+    ).ok,
+  );
+  await host.timeout(2000).emitWithAck('room:leave');
+  const deniedAfterLeave = await guest.timeout(2000).emitWithAck('room:end');
+  assert.equal(deniedAfterLeave.ok, false);
+  // A copied display name does not confer creator permissions.
+  await stranger.timeout(2000).emitWithAck('room:join', { name: 'Host', code: created.data.code });
+  assert.equal((await stranger.timeout(2000).emitWithAck('room:end')).ok, false);
+  await host.timeout(2000).emitWithAck('room:join', { name: 'Host', code: created.data.code });
+  const ended = event<string>(guest, 'room:ended');
+  assert.ok((await host.timeout(2000).emitWithAck('room:end')).ok);
+  assert.match(await ended, /creator ended/);
 });

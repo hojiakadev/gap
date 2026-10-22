@@ -66,7 +66,7 @@ Connected browsers keep up to 150 received/sent items in memory, including Blob 
 
 LocalStorage contains only `gap.preferences` with the display name (required for connecting), theme preference, and interface language. Invite codes are placed in URL fragments, which browsers do not send in HTTP requests; they can still appear in browser history. Nothing is stored in IndexedDB, cookies, service workers, or a database.
 
-Gap is **not end-to-end encrypted**. Use HTTPS in production for transport encryption. Anyone who has an invitation can join within capacity, and any participant can end the tunnel. Do not use it as an anonymous public file host. Each socket has rate limits; each transfer is validated for size, chunk order, and declared byte count. Transfers time out after 60 seconds of inactivity. There is no malware scanning. Downloads retain their original extension; only PNG/JPEG/GIF/WebP are previewed, never HTML/SVG or other executable file types.
+Gap is **not end-to-end encrypted**. Use HTTPS in production for transport encryption. Anyone who has an invitation can join within capacity, and only its creator can end the tunnel for everyone. Creator permission is tied to the original live socket, never a display name. Leaving does not transfer ownership; after a creator disconnects, remaining members can leave individually and the room still expires automatically. Do not use it as an anonymous public file host. Each socket has rate limits; each transfer is validated for size, chunk order, and declared byte count. Transfers time out after 60 seconds of inactivity. There is no malware scanning. Downloads retain their original extension; only PNG/JPEG/GIF/WebP are previewed, never HTML/SVG or other executable file types.
 
 On plain HTTP LAN origins the Clipboard API can be unavailable. The UI explains this and codes can be selected/copied manually. File transfer IDs use a browser UUID helper that also works on HTTP LAN. Use HTTPS for a public installation.
 
@@ -107,3 +107,9 @@ Gap uses `i18next` and `react-i18next` with bundled catalogs in `src/i18n/locale
 Navigation, forms, dialogs, help/privacy pages, messaging controls, accessibility labels, validation messages, and known relay notifications are translated. Dates/numbers follow the interface locale. Russian plural forms cover room expiry and code line counts. User messages, names, filenames, invite codes, and programming code remain unchanged. No translation service, external requests, or content persistence is added.
 
 Catalogs use English source phrases as flat keys (`keySeparator` and `nsSeparator` are disabled); interpolated and pluralized messages use named keys. Add each key to all three catalogs. Tests verify key and placeholder parity, plural rules, language detection, and server error coverage.
+
+## Mobile conversations and invitations
+
+On phones the conversation fills the available viewport with a compact, growing message field. Tap **+** for formatting, code, preview, and file attachment controls. Enter adds a newline on mobile; use Send to send. The conversation adjusts to the visual viewport when the keyboard opens. Incoming messages do not pull you away while reading older content.
+
+Tap **Invite** in the chat header for the QR code and invitation link. Share the link or QR image with the device share sheet where supported, or download the QR as a PNG. Opening an invite link shows the join task first, with the tunnel code filled in. Participants are available from the people button; only the creator sees the action to end the tunnel.

@@ -264,7 +264,13 @@ export function useTunnel(notify: (message: string) => void) {
   const leave = async (end: boolean) => {
     // Closing the transport is a safe fallback if a leave acknowledgement is lost.
     try {
-      await socketRef.current!.timeout(4000).emitWithAck(end ? 'room:end' : 'room:leave');
+      const result = await socketRef
+        .current!.timeout(4000)
+        .emitWithAck(end ? 'room:end' : 'room:leave');
+      if (!result.ok) {
+        notifyRef.current(result.error);
+        return;
+      }
     } catch {
       socketRef.current?.disconnect();
       socketRef.current?.connect();

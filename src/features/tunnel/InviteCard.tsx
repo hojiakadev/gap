@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { useState, type FocusEvent } from 'react';
+import { useRef, useState, type FocusEvent } from 'react';
 import { Alert, Button, MenuItem, TextField } from '@mui/material';
 import ContentCopyRounded from '@mui/icons-material/ContentCopyRounded';
-import { QRCodeSVG } from 'qrcode.react';
+import ShareRounded from '@mui/icons-material/ShareRounded';
+import DownloadRounded from '@mui/icons-material/DownloadRounded';
+import { QRCodeCanvas } from 'qrcode.react';
 import { displayCode } from '../../../shared/protocol';
 import { copyText } from '../../lib/format';
 import { invitationUrl, inviteOrigins, isLoopbackHost, isPrivateIpv4 } from '../../lib/invitations';
@@ -15,6 +17,39 @@ interface Props {
 }
 export function InviteCard({ code, expiresAt, now, notify }: Props) {
   const { t } = useTranslation();
+  const qr = useRef<HTMLCanvasElement>(null);
+  const shareInvite = async () => {
+    if (!url) return;
+    try {
+      if (navigator.share)
+        await navigator.share({ title: 'Gap', text: t('Join my Gap tunnel'), url });
+      else copy(url);
+    } catch (error) {
+      if (!(error instanceof Error && error.name === 'AbortError')) copy(url);
+    }
+  };
+  const shareQr = async (downloadOnly = false) => {
+    try {
+      const canvas = qr.current;
+      if (!canvas) return;
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error();
+      const file = new File([blob], `gap-${code}.png`, { type: 'image/png' });
+      if (!downloadOnly && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Gap', text: t('Join my Gap tunnel') });
+      } else {
+        const objectUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = objectUrl;
+        anchor.download = file.name;
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+      }
+    } catch (error) {
+      if (!(error instanceof Error && error.name === 'AbortError'))
+        notify(t('Could not share the QR code. Try copying the invite link.'));
+    }
+  };
 
   const origins = inviteOrigins(
     window.location.origin,
@@ -69,13 +104,14 @@ export function InviteCard({ code, expiresAt, now, notify }: Props) {
       {url && (
         <>
           <div className="qr-wrap">
-            <QRCodeSVG
+            <QRCodeCanvas
+              ref={qr}
               value={url}
-              size={112}
+              size={256}
               fgColor="#087f72"
-              marginSize={0}
+              marginSize={4}
               level="M"
-              title={t('Scan to join this Gap tunnel')}
+              aria-label={t('Scan to join this Gap tunnel')}
             />
           </div>
           <TextField
@@ -94,6 +130,27 @@ export function InviteCard({ code, expiresAt, now, notify }: Props) {
           />
         </>
       )}
+      <div className="invite-share-actions">
+        <Button
+          variant="contained"
+          disabled={!url}
+          startIcon={<ShareRounded />}
+          onClick={() => void shareInvite()}
+        >
+          {t('Share invite')}
+        </Button>
+        <Button
+          variant="outlined"
+          disabled={!url}
+          startIcon={<DownloadRounded />}
+          onClick={() => void shareQr()}
+        >
+          {t('Share QR code')}
+        </Button>
+        <Button size="small" disabled={!url} onClick={() => void shareQr(true)}>
+          {t('Download QR code')}
+        </Button>
+      </div>
       <Button
         variant="contained"
         fullWidth

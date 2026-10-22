@@ -12,6 +12,7 @@ export interface Member {
   name: string;
 }
 export interface Room {
+  creatorId: string;
   code: string;
   mode: RoomMode;
   members: Member[];

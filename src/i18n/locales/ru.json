@@ -246,5 +246,20 @@
   "Participants": "Участники",
   "Invite teammates": "Пригласить команду",
   "The relay is unavailable. Check the connection or try again shortly.": "Сервер недоступен. Проверьте соединение или попробуйте чуть позже.",
-  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "Выберите «Только вдвоём» или «Вся команда», затем введите имя перед подключением. Аккаунт и пароль не нужны."
+  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "Выберите «Только вдвоём» или «Вся команда», затем введите имя перед подключением. Аккаунт и пароль не нужны.",
+  "You’re invited.": "Вас пригласили.",
+  "Join your teammates in this tunnel.": "Присоединитесь к команде в этом туннеле.",
+  "Create a new tunnel instead": "Создать новый туннель",
+  "Invite": "Пригласить",
+  "Close": "Закрыть",
+  "Tunnel creator": "Создатель туннеля",
+  "Share invite": "Поделиться приглашением",
+  "Share QR code": "Поделиться QR-кодом",
+  "Join my Gap tunnel": "Присоединяйтесь к моему туннелю Gap",
+  "Could not share the QR code. Try copying the invite link.": "Не удалось поделиться QR-кодом. Скопируйте ссылку-приглашение.",
+  "Formatting and attachments": "Форматирование и вложения",
+  "Only the tunnel creator can end this tunnel.": "Только создатель может завершить этот туннель.",
+  "The creator ended this tunnel. Its contents have been cleared.": "Создатель завершил туннель. Его содержимое очищено.",
+  "Waiting for a teammate…": "Ждём участника…",
+  "Download QR code": "Скачать QR-код"
 }

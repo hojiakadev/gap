@@ -246,5 +246,20 @@
   "Participants": "Participants",
   "Invite teammates": "Invite teammates",
   "The relay is unavailable. Check the connection or try again shortly.": "The relay is unavailable. Check the connection or try again shortly.",
-  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed."
+  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.",
+  "You’re invited.": "You’re invited.",
+  "Join your teammates in this tunnel.": "Join your teammates in this tunnel.",
+  "Create a new tunnel instead": "Create a new tunnel instead",
+  "Invite": "Invite",
+  "Close": "Close",
+  "Tunnel creator": "Tunnel creator",
+  "Share invite": "Share invite",
+  "Share QR code": "Share QR code",
+  "Join my Gap tunnel": "Join my Gap tunnel",
+  "Could not share the QR code. Try copying the invite link.": "Could not share the QR code. Try copying the invite link.",
+  "Formatting and attachments": "Formatting and attachments",
+  "Only the tunnel creator can end this tunnel.": "Only the tunnel creator can end this tunnel.",
+  "The creator ended this tunnel. Its contents have been cleared.": "The creator ended this tunnel. Its contents have been cleared.",
+  "Waiting for a teammate…": "Waiting for a teammate…",
+  "Download QR code": "Download QR code"
 }

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import AddRounded from '@mui/icons-material/AddRounded';
 import AttachFileRounded from '@mui/icons-material/AttachFileRounded';
 import CodeRounded from '@mui/icons-material/CodeRounded';
 import SendRounded from '@mui/icons-material/SendRounded';
@@ -31,11 +32,13 @@ export function Composer({
   notify,
 }: Props) {
   const { t } = useTranslation();
+  const compact = useMediaQuery('(max-width: 760px)');
 
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [codeOpen, setCodeOpen] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (replyTo) {
@@ -43,6 +46,12 @@ export function Composer({
       requestAnimationFrame(() => input.current?.focus());
     }
   }, [replyTo]);
+  useEffect(() => {
+    const element = input.current;
+    if (!element) return;
+    element.style.height = 'auto';
+    element.style.height = `${Math.min(element.scrollHeight, 120)}px`;
+  }, [draft, preview]);
   const format = (marker: '**' | '_') => {
     const element = input.current;
     if (!element || !ready) return;
@@ -92,7 +101,15 @@ export function Composer({
           </IconButton>
         </div>
       )}
-      <div className="composer-box">
+      <div className={`composer-box ${toolsOpen ? 'tools-open' : ''}`}>
+        <IconButton
+          className="mobile-compose-tools"
+          aria-label={t('Formatting and attachments')}
+          aria-expanded={toolsOpen}
+          onClick={() => setToolsOpen(!toolsOpen)}
+        >
+          <AddRounded />
+        </IconButton>
         <div className="format-toolbar">
           <div>
             <Tooltip title={t('Bold (Ctrl / ⌘ + B)')}>
@@ -157,16 +174,12 @@ export function Composer({
           ref={input}
           aria-label={t('Message')}
           hidden={preview}
-          placeholder={
-            ready
-              ? t('Write a message. Share a little something…')
-              : t('Invite a teammate to start sharing…')
-          }
+          placeholder={ready ? t('Message') : t('Waiting for a teammate…')}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           maxLength={LIMITS.textLength}
           disabled={!ready}
-          rows={3}
+          rows={1}
           onKeyDown={(event) => {
             if (event.nativeEvent.isComposing) return;
             if ((event.ctrlKey || event.metaKey) && ['b', 'i'].includes(event.key.toLowerCase())) {
@@ -177,7 +190,10 @@ export function Composer({
               event.preventDefault();
               onCancelReply();
             }
-            if (event.key === 'Enter' && (!event.shiftKey || event.ctrlKey || event.metaKey)) {
+            if (
+              event.key === 'Enter' &&
+              ((!compact && !event.shiftKey) || event.ctrlKey || event.metaKey)
+            ) {
               event.preventDefault();
               void send();
             }
@@ -191,12 +207,13 @@ export function Composer({
         <div className="composer-actions">
           <span className="format-hint">{t('**bold** · _italic_ · `inline code`')}</span>
           <Button
+            aria-label={t('Send')}
             variant="contained"
             disabled={!ready || sending || !draft.trim()}
             endIcon={<SendRounded sx={{ fontSize: 16 }} />}
             onClick={() => void send()}
           >
-            {sending ? t('Sending…') : t('Send')}
+            <span className="send-label">{sending ? t('Sending…') : t('Send')}</span>
           </Button>
         </div>
       </div>

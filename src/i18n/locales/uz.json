@@ -246,5 +246,20 @@
   "Participants": "Ishtirokchilar",
   "Invite teammates": "Jamoani taklif qilish",
   "The relay is unavailable. Check the connection or try again shortly.": "Server bilan aloqa yo‘q. Ulanishni tekshiring yoki birozdan so‘ng urinib ko‘ring.",
-  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "«Faqat ikkimiz» yoki «Butun jamoa»ni tanlang, so‘ng ulanishdan oldin ismingizni kiriting. Akkaunt va parol kerak emas."
+  "Choose “Just us two” or “The whole team”, then enter your name before connecting. No account or password needed.": "«Faqat ikkimiz» yoki «Butun jamoa»ni tanlang, so‘ng ulanishdan oldin ismingizni kiriting. Akkaunt va parol kerak emas.",
+  "You’re invited.": "Siz taklif qilindingiz.",
+  "Join your teammates in this tunnel.": "Shu tunnelda jamoadoshlaringizga qo‘shiling.",
+  "Create a new tunnel instead": "Yangi tunnel yaratish",
+  "Invite": "Taklif qilish",
+  "Close": "Yopish",
+  "Tunnel creator": "Tunnel yaratuvchisi",
+  "Share invite": "Taklifni ulashish",
+  "Share QR code": "QR-kodni ulashish",
+  "Join my Gap tunnel": "Gap tunnelimga qo‘shiling",
+  "Could not share the QR code. Try copying the invite link.": "QR-kodni ulashib bo‘lmadi. Taklif havolasini nusxalang.",
+  "Formatting and attachments": "Formatlash va fayllar",
+  "Only the tunnel creator can end this tunnel.": "Bu tunnelni faqat uning yaratuvchisi tugata oladi.",
+  "The creator ended this tunnel. Its contents have been cleared.": "Yaratuvchi tunnelni tugatdi. Uning kontenti tozalandi.",
+  "Waiting for a teammate…": "Jamoadosh kutilmoqda…",
+  "Download QR code": "QR-kodni yuklab olish"
 }

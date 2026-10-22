@@ -11,17 +11,18 @@ import { Brand } from './Brand';
 export type Page = 'home' | 'how' | 'privacy';
 interface Props {
   children: ReactNode;
+  inRoom?: boolean;
   page: Page;
   onPage: (page: Page) => void;
   name: string;
   onSettings: () => void;
 }
-export function Shell({ children, page, onPage, name, onSettings }: Props) {
+export function Shell({ children, page, onPage, name, onSettings, inRoom }: Props) {
   const { t } = useTranslation();
   const { mode, toggleMode } = useAppearance();
   const [menu, setMenu] = useState<HTMLElement | null>(null);
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${inRoom ? 'chat-active' : ''}`}>
       <header className="site-header">
         <div className="header-inner">
           <Brand onClick={() => onPage('home')} />

@@ -81,6 +81,7 @@ export default function App() {
   return (
     <>
       <Shell
+        inRoom={!!tunnel.room && page === 'home'}
         page={page}
         onPage={setPage}
         name={name}

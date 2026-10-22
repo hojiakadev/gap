@@ -10,6 +10,6 @@ Designed before the transport implementation. A focused workspace for a fleeting
 - Interaction: no account wall; a name is required before creating or joining. Clear loading, disconnected, expired, full-room, empty, and transferring states. Keyboard accessible controls and reduced-motion support.
 - Responsive: keep compact header controls with an overflow menu and stack room details below conversation on small screens.
 
-The composer includes a formatting toolbar, text preview, quoted replies, and a separate code editor. A persistent theme switch stays in the header on desktop and mobile.
+The composer includes a formatting toolbar, text preview, quoted replies, and a separate code editor. A theme switch stays in the global header. On phones, an active conversation replaces global navigation with a compact chat header, independently scrolling messages, and a growing composer. Invite and participant dialogs keep secondary content out of the conversation.
 
 Only free Material UI components. No stock dashboard template, paid assets, third-party font requests, or remote image dependencies.

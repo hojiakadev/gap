@@ -18,6 +18,8 @@ interface Props {
 }
 export function Landing({ initialCode, busy, connected, onCreate, onJoin }: Props) {
   const { t } = useTranslation();
+  const [inviteDismissed, setInviteDismissed] = useState(false);
+  const invited = !!initialCode && !inviteDismissed;
   const [mode, setMode] = useState<RoomMode>('team');
   const [code, setCode] = useState(initialCode);
   const [error, setError] = useState(false);
@@ -32,19 +34,34 @@ export function Landing({ initialCode, busy, connected, onCreate, onJoin }: Prop
   };
   return (
     <>
-      <section className="hero">
+      <section className={`hero ${invited ? 'invite-hero' : ''}`}>
         <div className="hero-copy">
           <h1>
-            {t('Good things')}
-            <br />
-            {t('travel')} <span>{t('fast.')}</span>
+            {invited ? (
+              t('You’re invited.')
+            ) : (
+              <>
+                {t('Good things')}
+                <br />
+                {t('travel')} <span>{t('fast.')}</span>
+              </>
+            )}
           </h1>
-          <p className="hero-description">{t('Messages, links, and files. No accounts.')}</p>
+          <p className="hero-description">
+            {t(
+              invited
+                ? 'Join your teammates in this tunnel.'
+                : 'Messages, links, and files. No accounts.',
+            )}
+          </p>
         </div>
         <TunnelArt />
       </section>
-      <section className="connection-grid" aria-label={t('Connect with your teammates')}>
-        <article className="action-card">
+      <section
+        className={`connection-grid ${invited ? 'invite-first' : ''}`}
+        aria-label={t('Connect with your teammates')}
+      >
+        <article className="action-card create-card">
           <div className="card-heading">
             <span className="card-icon">
               <AddRounded />
@@ -87,7 +104,7 @@ export function Landing({ initialCode, busy, connected, onCreate, onJoin }: Prop
             {t('Create a tunnel')}
           </Button>
         </article>
-        <article className="action-card">
+        <article className="action-card join-card">
           <div className="card-heading">
             <span className="card-icon">
               <LinkRounded />
@@ -135,6 +152,11 @@ export function Landing({ initialCode, busy, connected, onCreate, onJoin }: Prop
           </form>
         </article>
       </section>
+      {invited && (
+        <Button className="invite-alternative" onClick={() => setInviteDismissed(true)}>
+          {t('Create a new tunnel instead')}
+        </Button>
+      )}
       <p className="temporary-note">{t('Content disappears when the tunnel ends.')}</p>
     </>
   );
